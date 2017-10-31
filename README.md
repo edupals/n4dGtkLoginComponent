@@ -1,7 +1,7 @@
-#login-component
+# login-component  
 This is a Lliurex specific login component for Gtk apps.  
 **API**  
-##Functions  
+### Functions  
 · set_default_username(default_username)  
 	Sets the placeholder of the "username" entry to "default_username"  
 · set_default_server(default_server)  
@@ -23,7 +23,7 @@ This is a Lliurex specific login component for Gtk apps.
 · after_validation_func()  
 	Sets the function that the loginComponent will launch after a correct user's validation  
   
-##Examples  
+### Examples  
   
 #!/usr/bin/env python3  
 import gi  
