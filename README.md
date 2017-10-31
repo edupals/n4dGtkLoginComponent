@@ -23,7 +23,7 @@ This is a Lliurex specific login component for Gtk apps.
 	Sets the function that the loginComponent will launch after a correct user's validation  
   
 ### Examples  
-  
+```python  
 #!/usr/bin/env python3  
 import gi  
 gi.require_version('Gtk', '3.0')  
@@ -57,3 +57,4 @@ def start_gui():
   
 start_gui()  
 Gtk.main()  
+```
