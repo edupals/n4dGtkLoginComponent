@@ -5,21 +5,21 @@ This is a Lliurex specific login component for Gtk apps.
 	Sets the placeholder of the "username" entry to "default_username"  
 ###### set_default_server(default_server)  
 	Sets the placeholder of the "server" entry to "default_server"  
-· set_banner(image)  
+###### set_banner(image)  
 	Sets the user's image for the login form, by default is "llx-avatar"  
 	If the image isn't a full path then is searched in the default theme.  
-· set_info_banner(image)  
+###### set_info_banner(image)  
 	Sets the info box banner, by default is "None"  
-· set_info_background(image=None,from_color=None,to_color=None)  
+###### set_info_background(image=None,from_color=None,to_color=None)  
 	Sets the background for the info box. It can be a system's image or a linear gradient going "from_color" to "to_color". By default all fields are "None"  
-· set_info_text(title,subtitle,text)  
+###### set_info_text(title,subtitle,text)  
 	Sets the information to show in the info box.  
 	It must have a title, a subtitle and a text as arguments.  
-· get_action_area()  
+###### get_action_area()  
 	Returns the info box so we can add any widget to it.  
-· render_form()  
+###### render_form()  
 	Draws the screen and returns the box drawed.  
-· after_validation_func()  
+###### after_validation_func()  
 	Sets the function that the loginComponent will launch after a correct user's validation  
   
 ### Examples  
