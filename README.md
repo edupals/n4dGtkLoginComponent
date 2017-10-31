@@ -1,10 +1,9 @@
 # login-component  
 This is a Lliurex specific login component for Gtk apps.  
-**API**  
-### Functions  
-· set_default_username(default_username)  
+### API  
+###### set_default_username(default_username)  
 	Sets the placeholder of the "username" entry to "default_username"  
-· set_default_server(default_server)  
+###### set_default_server(default_server)  
 	Sets the placeholder of the "server" entry to "default_server"  
 · set_banner(image)  
 	Sets the user's image for the login form, by default is "llx-avatar"  
