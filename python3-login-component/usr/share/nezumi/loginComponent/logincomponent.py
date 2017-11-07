@@ -2,7 +2,7 @@
 ###
 #This class returns a HBox whith a standarized login form
 ###
-import os
+import os,sys
 import threading
 import gi
 gi.require_version('Gtk', '3.0')
@@ -11,10 +11,14 @@ import json
 import cairo
 #import commands
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, GLib, PangoCairo, Pango
-import xmlrpc.client as n4d
+try:
+	import xmlrpc.client as n4d
+except ImportError:
+	raise ImportError("xmlrpc not available. Disabling server queries")
 import ssl
 import time
 import gettext
+import pam
 
 gettext.textdomain('nezumi.ui.common')
 _ = gettext.gettext
@@ -23,9 +27,13 @@ GObject.threads_init()
 class loginN4DComponent():
 	def __init__(self):
 		threading.Thread.__init__(self)
+		self.sw_n4d=True
+		if hasattr(sys,'last_value'):
+		#If there's any error at this point it only could be an ImportError caused by xmlrpc
+			self.sw_n4d=False
 		self.sw_n4d=False
-		self.username_placeholder="Username"
-		self.server_placeholder="Server IP (Default value : server)"
+		self.username_placeholder=_("Username")
+		self.server_placeholder=_("Server IP (Default value : server)")
 		self.banner_default="llx-avatar"
 		self.info_msg=''
 		self.info_background=''
@@ -118,9 +126,7 @@ class loginN4DComponent():
 		self.txt_server=Gtk.Entry()
 		self.set_default_server(self.server_placeholder)
 		self.txt_server.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY,"server")
-#		self.banner=Gtk.Image()
-#		self.set_banner(self.banner_default)
-		self.btn_sign=Gtk.Button(label=_("Sign In"),stock=Gtk.STOCK_OK)
+		self.btn_sign=Gtk.Button(stock=Gtk.STOCK_OK)
 		self.btn_sign.connect('clicked',self._validate)
 		self.frame=Gtk.Frame()
 		
@@ -174,22 +180,24 @@ class loginN4DComponent():
 			lbl_msg.set_max_width_chars(25)
 			lbl_msg.set_markup(self.info_msg)
 			self.info_box.add(lbl_msg)
-#		css=eval('b"""#info {background-image:'+self.info_background+';;}"""')
 		css=eval('b"""#info {'+self.info_background+';;}"""')
 		style_provider=Gtk.CssProvider()
 		style_provider.load_from_data(css)
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 		self.info_box.set_name("info")
 		return(self.info_box)
+	#def _render_info_form
 
 	def _set_widget_default_props(self,widget,tooltip=None):
 		widget.set_valign(True)
 		widget.set_halign(True)
 		widget.set_tooltip_text(tooltip)
+	#def _set_widget_default_props
 
 	def _info_hide(self,widget,data):
 		self.sta_info.hide()
 		self.frame.set_sensitive(True)
+	#def _info_hide
 
 	def _validate(self,widget=None):
 		user=self.txt_username.get_text()
@@ -201,27 +209,37 @@ class loginN4DComponent():
 		self.frame.set_sensitive(False)
 		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
 		th.start()
+	#def _validate
 
 	def _t_validate(self,user,pwd,server):
-		sw_ok=True
-		time.sleep(3)
-		context=ssl._create_unverified_context()
-		c = n4d.ServerProxy("https://"+server+":9779",context=context,allow_none=True)
-		ret=None
-		try:
-		    ret=c.validate_user(user,pwd)
-		except Exception as e:
-			sw_ok=False
-			ret=[False,str(e)]
+		ret=[False]
+		if self.sw_n4d:
+			self.n4dclient=self._n4d_connect(server)
+			try:
+				loginMethod='N4d'
+				ret=self.n4dclient.validate_user(user,pwd)
+			except Exception as e:
+				ret=[False,str(e)]
+		else:
+			loginMethod='PAM'
+			p=pam.pam()
+			if p.authenticate(user,pwd):
+				ret=[True]
+
 		self.spinner.stop()
 		if not ret[0]:
 			self.lbl_error.show()
 			self.sta_info.show()
 		if ret[0]:
-			self.after_validate()
+			self.after_validate(loginMethod,user,pwd)
+		#local validation
+	#def _t_validate
 
 	def after_validation_func(self,func,data=None):
 		self.after_validate=func
+	#def after_validation_func
 
-	def _n4d_connect(self):
-		return sw_n4d
+	def _n4d_connect(self,server):
+		context=ssl._create_unverified_context()
+		c = n4d.ServerProxy("https://"+server+":9779",context=context,allow_none=True)
+		return c
