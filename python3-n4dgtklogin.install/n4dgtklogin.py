@@ -24,14 +24,13 @@ gettext.textdomain('nezumi.ui.common')
 _ = gettext.gettext
 GObject.threads_init()
 
-class loginN4DComponent():
+class N4dGtkLogin():
 	def __init__(self):
 		threading.Thread.__init__(self)
 		self.sw_n4d=True
 		if hasattr(sys,'last_value'):
 		#If there's any error at this point it only could be an ImportError caused by xmlrpc
 			self.sw_n4d=False
-		self.sw_n4d=False
 		self.username_placeholder=_("Username")
 		self.server_placeholder=_("Server IP (Default value : server)")
 		self.banner_default="llx-avatar"
