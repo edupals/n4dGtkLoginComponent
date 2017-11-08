@@ -38,7 +38,7 @@ if __name__ == '__main__':
         platforms='UNIX',
 #        scripts = [''],
         package_dir = {'':'python3-n4dgtklogin.install'},
-        packages = ['edupals.ui.n4dgtklogin'],
+        packages = ['edupals.ui'],
         data_files = [],
         classifiers=[
                 'Development Status :: 4 - Beta',
