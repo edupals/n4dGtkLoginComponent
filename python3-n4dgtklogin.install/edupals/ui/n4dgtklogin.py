@@ -79,11 +79,14 @@ class N4dGtkLogin():
 				img.set_from_pixbuf(pixbuf)
 		return img
 	
-	def set_info_background(self,image=None,from_color='#ffffff',to_color='@silver'):
+	def set_info_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
 		if image and os.path.isfile(image):
 			self.info_background='background-image:url("'+image+'"); background-repeat:no-repeat'
 		else:
-			self.info_background='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
+			if gradient=='linear':
+				self.info_background='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
+			elif gradient=='radial':
+				self.info_background='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
 	#def set_info_background
 
 	def set_info_text(self,title,subtitle,text):
@@ -234,7 +237,7 @@ class N4dGtkLogin():
 		#local validation
 	#def _t_validate
 
-	def after_validation_func(self,func,data=None):
+	def after_validation_goto(self,func,data=None):
 		self.after_validate=func
 	#def after_validation_func
 
