@@ -30,7 +30,7 @@ This is a Lliurex specific login component for Gtk apps.
 import gi  
 gi.require_version('Gtk', '3.0')  
 from gi.repository import Gtk  
-from n4dgtklogin import *  
+from edupals.ui.n4dgtklogin import *  
   
 def _signin():  
 	print("OK")  
