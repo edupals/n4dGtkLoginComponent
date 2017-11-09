@@ -34,16 +34,19 @@ class N4dGtkLogin():
 		self.default_spacing=12
 		self.username_placeholder=_("Username")
 		self.server_placeholder=_("Server IP (Default value : server)")
-		self.banner_default="llx-avatar"
+		self.login_banner_default="llx-avatar"
 		self.info_msg=''
 		self.info_background=''
 		self.mw_background=''
 		self.form_background=''
 		self.info_box=Gtk.Box(spacing=self.default_spacing,orientation=Gtk.Orientation.VERTICAL)
+		self.info_box.set_homogeneous(False)
 		self.txt_username=Gtk.Entry()
 		self.txt_server=Gtk.Entry()
-		self.banner=Gtk.Image()
-		self.set_banner(self.banner_default)
+		self.login_banner=Gtk.Image()
+		if not self._lookup_user_face():
+			self.set_login_banner(self.login_banner_default)
+		self.login_banner.set_margin_bottom(self.default_spacing)
 		self.info_banner=None
 		self.sw_info=False
 		self.left_span=2
@@ -55,24 +58,27 @@ class N4dGtkLogin():
 		self.right_span=right_span
 	
 	def set_mw_background(self,image=None,from_color='#ffffff',to_color='silver',gradient='linear'):
-		if image and os.path.isfile(image):
-			self.mw_background='background-image:url("'+image+'"); background-repeat:no-repeat; background-size:cover'
-		else:
-			if gradient=='linear':
-				self.mw_background='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
-			elif gradient=='radial':
-				self.mw_background='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
+		self.mw_background=self._set_background(image,from_color,to_color,gradient)
 	#def set_mw_background
 
 	def set_login_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
+		self.form_background=self._set_background(image,from_color,to_color,gradient)
+	#def set_login_background
+
+	def set_info_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
+		self.info_background=self._set_background(image,from_color,to_color,gradient)
+	#def set_info_background
+
+	def _set_background(self,image=None,from_color='#ffffff',to_color='silver',gradient='linear'):
+		bg=''
 		if image and os.path.isfile(image):
-				self.form_background='background-image:url("'+image+'"); background-repeat:no-repeat; background-size:cover'
+			bg='background-image:url("'+image+'"); background-repeat:no-repeat; background-size:100% 100%'
 		else:
 			if gradient=='linear':
-				self.form_background='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
+				bg='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
 			elif gradient=='radial':
-				self.form_background='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
-	#def set_login_background
+				bg='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
+		return bg
 
 	def set_default_username(self,username):
 		self.username_placeholder=username
@@ -88,36 +94,33 @@ class N4dGtkLogin():
 	def _set_text_for_entry(self,widget,text):
 		widget.set_placeholder_text(text)
 	#def _set_text_for_entry
-	
-	def set_banner(self,banner):
-		self.banner=self._get_image(banner)
+
+	def _lookup_user_face(self):
+		sw_ok=False
+		if os.path.isfile(os.path.expanduser('~/.face')):
+			sw_ok=True
+			self.set_login_banner(os.path.expanduser('~/.face'))
+		return sw_ok
+
+	def set_login_banner(self,banner):
+		self.login_banner=self._get_image(banner)
 	#def set_banner
 
-	def set_info_banner(self,image):
-		self.info_banner=self._get_image(image)
+	def set_info_banner(self,image,x=72,y=72):
+		self.info_banner=self._get_image(image,x,y)
 	#def set_info_banner
 
-	def _get_image(self,image):
+	def _get_image(self,image,x=72,y=72):
 		icon_theme=Gtk.IconTheme.get_default()
 		img=Gtk.Image()
 		if icon_theme.has_icon(image):
 			img.set_from_icon_name(image,Gtk.IconSize.DIALOG)
 		else:
 			if os.path.isfile(image):
-				pixbuf=GdkPixbuf.Pixbuf.new_from_file_at_scale(image,-1,Gtk.IconSize.DIALOG,True)
+				pixbuf=GdkPixbuf.Pixbuf.new_from_file_at_scale(image,x,y,True)
 				img.set_from_pixbuf(pixbuf)
 		return img
 	
-	def set_info_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
-		if image and os.path.isfile(image):
-				self.info_background='background-image:url("'+image+'"); background-repeat:no-repeat;background-size:cover'
-		else:
-			if gradient=='linear':
-				self.info_background='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
-			elif gradient=='radial':
-				self.info_background='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
-	#def set_info_background
-
 	def set_info_text(self,title,subtitle,text):
 		sw_ok=True
 		try:
@@ -187,7 +190,7 @@ class N4dGtkLogin():
 		color=Gdk.Color(0,0,1)
 		self.spinner.modify_bg(Gtk.StateType.NORMAL,color)
 		hbox.attach(self.spinner,0,1,1,5)
-		hbox.attach(self.banner,0,0,1,1)
+		hbox.attach(self.login_banner,0,0,1,1)
 		hbox.attach(self.txt_username,0,1,1,1)
 		self._set_widget_default_props(self.txt_username,_("Username"))
 		self.txt_username.connect('activate',self._validate)
@@ -220,8 +223,9 @@ class N4dGtkLogin():
 	#def _render_login_form
 
 	def _render_info_form(self):
+		hbox=Gtk.Box(spacing=self.default_spacing,orientation=Gtk.Orientation.VERTICAL)
 		if self.info_banner:
-			self.info_box.add(self.info_banner)
+			hbox.pack_start(self.info_banner,False,False,0)
 		if self.info_msg:
 			lbl_msg=Gtk.Label()
 			lbl_msg.set_use_markup(True)
@@ -229,14 +233,17 @@ class N4dGtkLogin():
 			lbl_msg.set_width_chars(25)
 			lbl_msg.set_max_width_chars(25)
 			lbl_msg.set_markup(self.info_msg)
-			self.info_box.pack_start(lbl_msg,True,True,0)
-		css=eval('b"""#info {'+self.info_background+';;}"""')
+			hbox.pack_start(lbl_msg,True,True,0)
+		lbl_bg='#label {background-color:rgba(200,200,200,0.5);;}'
+		lbl_msg.set_name("label")
+		css=eval('b"""#info {'+self.info_background+';;}'+lbl_bg+'"""')
 		style_provider=Gtk.CssProvider()
 		style_provider.load_from_data(css)
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 		self.info_box.set_name("info")
-		lbl_msg.props.valign=Gtk.Align.CENTER
-		lbl_msg.props.halign=Gtk.Align.CENTER
+		hbox.props.valign=Gtk.Align.CENTER
+		hbox.props.halign=Gtk.Align.CENTER
+		self.info_box.pack_start(hbox,True,True,0)
 		return(self.info_box)
 	#def _render_info_form
 
