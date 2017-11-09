@@ -1,10 +1,12 @@
 # n4dGtkLogincomponent
 This is a Lliurex specific login component for Gtk apps.  
 ### API  
+###### set_mw_proportion_ratio(columns_left,columns_right)  
+	Sets the portion of screen reserved to each component (info and login form). It works splitting the main window in (columns_left+columns_right) columns and asigning to each part the desired number of columns.
 ###### set_mw_background(image=None,from_color=None,to_color=None,gradient='linear')  
 	Sets the background for the login box. It can be a system's image or gradient going "from_color" to "to_color". By default all fields are "None" and only radial and linear gradients are supported. If we set a background image the image covers all the box area.
-###### set_form_background(image=None,from_color=None,to_color=None,gradient='linear')  
-	Sets the background for the form box (the box containing both login and info). It can be a system's image or gradient going "from_color" to "to_color". By default all fields are "None" and only radial and linear gradients are supported.
+###### set_login_background(image=None,from_color=None,to_color=None,gradient='linear')  
+	Sets the background for the login box. It can be a system's image or gradient going "from_color" to "to_color". By default all fields are "None" and only radial and linear gradients are supported. If we set a background image the image covers all the box area.
 ###### set_default_username(default_username)  
 	Sets the placeholder of the "username" entry to "default_username"  
 ###### set_default_server(default_server)  
@@ -21,8 +23,8 @@ This is a Lliurex specific login component for Gtk apps.
 	It must have a title, a subtitle and a text as arguments and supports markup language.
 ###### get_action_area()  
 	Returns the info box so we can add any widget to it.  
-###### render_form()  
-	Draws the screen and returns the box drawed.  
+###### render_screen()  
+	Returns the rendered main box.
 ###### after_validation_goto()  
 	Sets the function that the loginComponent will launch after a correct user's validation  
   
@@ -44,6 +46,11 @@ def start_gui():
 	loginComponent=N4dGtkLogin() #Init the login component  
 	loginComponent.set_info_text("<span foreground='black'>Title</span>","Subtitle","Text text text.\nText text text:\n<sub>* text with sub tag</sub>")  
 	#Uncomment and comment...
+	##Change the proportion ratio 
+	#loginComponent.set_mw_proportion_ratio(2,1)
+	#loginComponent.set_mw_proportion_ratio(1,2)
+	#loginComponent.set_mw_proportion_ratio(3,9)
+	#loginComponent.set_mw_proportion_ratio(8,5)
 	##- Setting a background for the component
 	#loginComponent.set_mw_background(image='/usr/share/backgrounds/ubuntu-mate-xenial/The_MATErix.png')  
 	##- Setting a background for the form

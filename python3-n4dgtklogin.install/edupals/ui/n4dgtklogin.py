@@ -31,7 +31,7 @@ class N4dGtkLogin():
 		if hasattr(sys,'last_value'):
 		#If there's any error at this point it only could be an ImportError caused by xmlrpc
 			self.sw_n4d=False
-		self.default_spacing=6
+		self.default_spacing=12
 		self.username_placeholder=_("Username")
 		self.server_placeholder=_("Server IP (Default value : server)")
 		self.banner_default="llx-avatar"
@@ -46,7 +46,13 @@ class N4dGtkLogin():
 		self.set_banner(self.banner_default)
 		self.info_banner=None
 		self.sw_info=False
+		self.left_span=2
+		self.right_span=1
 	#def __init__
+
+	def set_mw_proportion_ratio(self,left_span,right_span):
+		self.left_span=left_span
+		self.right_span=right_span
 	
 	def set_mw_background(self,image=None,from_color='#ffffff',to_color='silver',gradient='linear'):
 		if image and os.path.isfile(image):
@@ -58,15 +64,15 @@ class N4dGtkLogin():
 				self.mw_background='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
 	#def set_mw_background
 
-	def set_form_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
+	def set_login_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
 		if image and os.path.isfile(image):
-			self.form_background='background-image:url("'+image+'"); background-repeat:no-repeat'
+				self.form_background='background-image:url("'+image+'"); background-repeat:no-repeat; background-size:cover'
 		else:
 			if gradient=='linear':
 				self.form_background='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
 			elif gradient=='radial':
 				self.form_background='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
-	#def set_form_background
+	#def set_login_background
 
 	def set_default_username(self,username):
 		self.username_placeholder=username
@@ -104,7 +110,7 @@ class N4dGtkLogin():
 	
 	def set_info_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
 		if image and os.path.isfile(image):
-			self.info_background='background-image:url("'+image+'"); background-repeat:no-repeat'
+				self.info_background='background-image:url("'+image+'"); background-repeat:no-repeat;background-size:cover'
 		else:
 			if gradient=='linear':
 				self.info_background='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
@@ -116,8 +122,7 @@ class N4dGtkLogin():
 		sw_ok=True
 		try:
 			msg="<b><big>"+title+"</big></b>"
-			msg_sub=subtitle.upper()
-			self.info_msg=msg+'\n'+msg_sub+'\n\n'+text
+			self.info_msg=msg+'\n'+subtitle+'\n\n'+text
 			self.sw_info=True
 		except Exception as e:
 			sw_ok=False
@@ -133,23 +138,25 @@ class N4dGtkLogin():
 		mw_box=Gtk.Box(spacing=0,orientation=Gtk.Orientation.HORIZONTAL)
 		(mw_bg,main_bg)=('','')
 
-		main_box=Gtk.Box(spacing=0,orientation=Gtk.Orientation.HORIZONTAL)
-		main_box.props.valign=Gtk.Align.CENTER
-		main_box.props.halign=Gtk.Align.CENTER
+		main_box=Gtk.Grid()
+		main_box.set_hexpand(True)
+		main_box.set_vexpand(True)
+		main_box.set_column_homogeneous(True)
+		main_box.set_row_homogeneous(True)
 		form_box=self._render_login_form(show_server)
 		if self.sw_info:
 			info_box=self._render_info_form()
-			main_box.pack_start(info_box,True,True,0)
-		main_box.pack_start(form_box,True,True,0)
+			main_box.attach(info_box,1,1,self.left_span,1)
+		main_box.attach(form_box,1+self.left_span,1,self.right_span,1)
 		mw_box.pack_start(main_box,True,True,0)
 		if self.mw_background:
 			mw_bg='#mw {'+self.mw_background+';;}'
 			mw_box.set_name("mw")
 		if self.form_background:
-			main_bg='#main {'+self.form_background+';;}'
-			main_box.set_name("main")
-		if mw_bg or main_bg:
-			css=eval('b"""'+mw_bg+main_bg+'"""')
+			form_bg='#main {'+self.form_background+';;}'
+			form_box.set_name("main")
+		if mw_bg or form_bg:
+			css=eval('b"""'+mw_bg+form_bg+'"""')
 			style_provider=Gtk.CssProvider()
 			style_provider.load_from_data(css)
 			Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -193,8 +200,9 @@ class N4dGtkLogin():
 			hbox.attach(self.txt_server,0,3,1,1)
 			self._set_widget_default_props(self.txt_server,_("Master Server IP"))
 			self.txt_server.connect('activate',self._validate)
+		self.btn_sign.set_margin_top(self.default_spacing)
 		hbox.attach(self.btn_sign,0,4,1,1)
-		self.frame.add(hbox)
+#		self.frame.add(hbox)
 		self.sta_info=Gtk.InfoBar()
 		self.sta_info.set_show_close_button(True)
 		self.sta_info.set_message_type(Gtk.MessageType.ERROR)
@@ -204,12 +212,10 @@ class N4dGtkLogin():
 		self.sta_info.set_no_show_all(True)
 		self.sta_info.connect('response',self._info_hide)
 		self.sta_info.set_valign(True)
+		hbox.props.valign=Gtk.Align.CENTER
+		hbox.props.halign=Gtk.Align.CENTER
 		form_box.pack_start(self.sta_info,False,True,0)
-		form_box.pack_start(self.frame,True,False,0)
-		form_box.set_margin_right(self.default_spacing)
-		color=Gdk.Color(65535,65535,65535)
-#		color=form_box.get_style_context().get_background_color(Gtk.StateType.NORMAL)
-		self.frame.modify_bg(Gtk.StateType.NORMAL,color)
+		form_box.pack_start(hbox,True,True,0)
 		return(form_box)
 	#def _render_login_form
 
@@ -223,15 +229,14 @@ class N4dGtkLogin():
 			lbl_msg.set_width_chars(25)
 			lbl_msg.set_max_width_chars(25)
 			lbl_msg.set_markup(self.info_msg)
-			self.info_box.add(lbl_msg)
+			self.info_box.pack_start(lbl_msg,True,True,0)
 		css=eval('b"""#info {'+self.info_background+';;}"""')
 		style_provider=Gtk.CssProvider()
 		style_provider.load_from_data(css)
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 		self.info_box.set_name("info")
-		self.info_box.set_margin_top(self.default_spacing)
-		self.info_box.set_margin_bottom(self.default_spacing)
-		self.info_box.set_margin_left(self.default_spacing)
+		lbl_msg.props.valign=Gtk.Align.CENTER
+		lbl_msg.props.halign=Gtk.Align.CENTER
 		return(self.info_box)
 	#def _render_info_form
 
