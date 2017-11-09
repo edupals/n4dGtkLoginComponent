@@ -31,12 +31,15 @@ class N4dGtkLogin():
 		if hasattr(sys,'last_value'):
 		#If there's any error at this point it only could be an ImportError caused by xmlrpc
 			self.sw_n4d=False
+		self.default_spacing=6
 		self.username_placeholder=_("Username")
 		self.server_placeholder=_("Server IP (Default value : server)")
 		self.banner_default="llx-avatar"
 		self.info_msg=''
 		self.info_background=''
-		self.info_box=Gtk.Box(spacing=6,orientation=Gtk.Orientation.VERTICAL)
+		self.mw_background=''
+		self.form_background=''
+		self.info_box=Gtk.Box(spacing=self.default_spacing,orientation=Gtk.Orientation.VERTICAL)
 		self.txt_username=Gtk.Entry()
 		self.txt_server=Gtk.Entry()
 		self.banner=Gtk.Image()
@@ -44,6 +47,26 @@ class N4dGtkLogin():
 		self.info_banner=None
 		self.sw_info=False
 	#def __init__
+	
+	def set_mw_background(self,image=None,from_color='#ffffff',to_color='silver',gradient='linear'):
+		if image and os.path.isfile(image):
+			self.mw_background='background-image:url("'+image+'"); background-repeat:no-repeat; background-size:cover'
+		else:
+			if gradient=='linear':
+				self.mw_background='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
+			elif gradient=='radial':
+				self.mw_background='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
+	#def set_mw_background
+
+	def set_form_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
+		if image and os.path.isfile(image):
+			self.form_background='background-image:url("'+image+'"); background-repeat:no-repeat'
+		else:
+			if gradient=='linear':
+				self.form_background='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
+			elif gradient=='radial':
+				self.form_background='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
+	#def set_form_background
 
 	def set_default_username(self,username):
 		self.username_placeholder=username
@@ -92,7 +115,7 @@ class N4dGtkLogin():
 	def set_info_text(self,title,subtitle,text):
 		sw_ok=True
 		try:
-			msg="<b><big>"+title.title()+"</big></b>"
+			msg="<b><big>"+title+"</big></b>"
 			msg_sub=subtitle.upper()
 			self.info_msg=msg+'\n'+msg_sub+'\n\n'+text
 			self.sw_info=True
@@ -107,15 +130,30 @@ class N4dGtkLogin():
 		return self.info_box
 
 	def render_form(self,show_server=True):
+		mw_box=Gtk.Box(spacing=0,orientation=Gtk.Orientation.HORIZONTAL)
+		(mw_bg,main_bg)=('','')
+
 		main_box=Gtk.Box(spacing=0,orientation=Gtk.Orientation.HORIZONTAL)
-		main_box.props.halign=Gtk.Align.CENTER
 		main_box.props.valign=Gtk.Align.CENTER
+		main_box.props.halign=Gtk.Align.CENTER
 		form_box=self._render_login_form(show_server)
 		if self.sw_info:
 			info_box=self._render_info_form()
 			main_box.pack_start(info_box,True,True,0)
 		main_box.pack_start(form_box,True,True,0)
-		return (main_box)
+		mw_box.pack_start(main_box,True,True,0)
+		if self.mw_background:
+			mw_bg='#mw {'+self.mw_background+';;}'
+			mw_box.set_name("mw")
+		if self.form_background:
+			main_bg='#main {'+self.form_background+';;}'
+			main_box.set_name("main")
+		if mw_bg or main_bg:
+			css=eval('b"""'+mw_bg+main_bg+'"""')
+			style_provider=Gtk.CssProvider()
+			style_provider.load_from_data(css)
+			Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+		return (mw_box)
 	#def render_form
 
 	def _render_login_form(self,show_server):
@@ -134,10 +172,10 @@ class N4dGtkLogin():
 		
 		self.frame.set_shadow_type(Gtk.ShadowType.OUT)   
 		hbox=Gtk.Grid()
-		hbox.set_margin_left(6)
-		hbox.set_margin_right(6)
-		hbox.set_margin_top(6)
-		hbox.set_margin_bottom(6)
+		hbox.set_margin_left(self.default_spacing)
+		hbox.set_margin_right(self.default_spacing)
+		hbox.set_margin_top(self.default_spacing)
+		hbox.set_margin_bottom(self.default_spacing)
 		self.spinner=Gtk.Spinner()
 		color=Gdk.Color(0,0,1)
 		self.spinner.modify_bg(Gtk.StateType.NORMAL,color)
@@ -168,6 +206,10 @@ class N4dGtkLogin():
 		self.sta_info.set_valign(True)
 		form_box.pack_start(self.sta_info,False,True,0)
 		form_box.pack_start(self.frame,True,False,0)
+		form_box.set_margin_right(self.default_spacing)
+		color=Gdk.Color(65535,65535,65535)
+#		color=form_box.get_style_context().get_background_color(Gtk.StateType.NORMAL)
+		self.frame.modify_bg(Gtk.StateType.NORMAL,color)
 		return(form_box)
 	#def _render_login_form
 
@@ -187,6 +229,9 @@ class N4dGtkLogin():
 		style_provider.load_from_data(css)
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 		self.info_box.set_name("info")
+		self.info_box.set_margin_top(self.default_spacing)
+		self.info_box.set_margin_bottom(self.default_spacing)
+		self.info_box.set_margin_left(self.default_spacing)
 		return(self.info_box)
 	#def _render_info_form
 
