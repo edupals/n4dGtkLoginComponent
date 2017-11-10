@@ -142,7 +142,7 @@ class N4dGtkLogin():
 
 	def render_form(self,show_server=True):
 		mw_box=Gtk.Box(spacing=0,orientation=Gtk.Orientation.HORIZONTAL)
-		(mw_bg,main_bg)=('','')
+		(mw_bg,form_bg)=('','')
 
 		main_box=Gtk.Grid()
 		main_box.set_hexpand(True)
