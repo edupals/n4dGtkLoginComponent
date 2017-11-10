@@ -57,22 +57,25 @@ class N4dGtkLogin():
 		self.left_span=left_span
 		self.right_span=right_span
 	
-	def set_mw_background(self,image=None,from_color='#ffffff',to_color='silver',gradient='linear'):
-		self.mw_background=self._set_background(image,from_color,to_color,gradient)
+	def set_mw_background(self,image=None,cover=False,from_color='#ffffff',to_color='silver',gradient='linear'):
+		self.mw_background=self._set_background(image,cover,from_color,to_color,gradient)
 	#def set_mw_background
 
-	def set_login_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
-		self.form_background=self._set_background(image,from_color,to_color,gradient)
+	def set_login_background(self,image=None,cover=False,from_color='#ffffff',to_color='@silver',gradient='linear'):
+		self.form_background=self._set_background(image,cover,from_color,to_color,gradient)
 	#def set_login_background
 
-	def set_info_background(self,image=None,from_color='#ffffff',to_color='@silver',gradient='linear'):
-		self.info_background=self._set_background(image,from_color,to_color,gradient)
+	def set_info_background(self,image=None,cover=False,from_color='#ffffff',to_color='@silver',gradient='linear'):
+		self.info_background=self._set_background(image,cover,from_color,to_color,gradient)
 	#def set_info_background
 
-	def _set_background(self,image=None,from_color='#ffffff',to_color='silver',gradient='linear'):
+	def _set_background(self,image=None,cover=False,from_color='#ffffff',to_color='silver',gradient='linear'):
 		bg=''
 		if image and os.path.isfile(image):
-			bg='background-image:url("'+image+'"); background-repeat:no-repeat; background-size:100% 100%'
+			if cover:
+				bg='background-image:url("'+image+'"); background-repeat:no-repeat; background-size:100% 100%'
+			else:
+				bg='background-image:url("'+image+'"); background-repeat:no-repeat;'
 		else:
 			if gradient=='linear':
 				bg='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
