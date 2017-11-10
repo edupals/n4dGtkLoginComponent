@@ -3,10 +3,10 @@ This is a Lliurex specific login component for Gtk apps.
 ### API  
 ###### set_mw_proportion_ratio(columns_left,columns_right)  
 	Sets the portion of screen reserved to each component (info and login form). It works splitting the main window in (columns_left+columns_right) columns and asigning to each part the desired number of columns. By default the proportion is set to 2:1
-###### set_mw_background(image=None,from_color=None,to_color=None,gradient='linear')  
-	Sets the background for the login box. It can be a system's image or gradient going "from_color" to "to_color". By default all fields are "None" and only radial and linear gradients are supported. If we set a background image the image covers all the box area.
-###### set_login_background(image=None,from_color=None,to_color=None,gradient='linear')  
-	Sets the background for the login box. It can be a system's image or gradient going "from_color" to "to_color". By default all fields are "None" and only radial and linear gradients are supported. If we set a background image the image covers all the box area.
+###### set_mw_background(image=None,cover=False,from_color=None,to_color=None,gradient='linear')  
+	Sets the background for the login box. It can be a system's image or gradient going "from_color" to "to_color". By default all fields are "None" and only radial and linear gradients are supported. If we set a background image and set cover=True then the image will cover all the box area.
+###### set_login_background(image=None,cover=False,from_color=None,to_color=None,gradient='linear')  
+	Sets the background for the login box. It can be a system's image or gradient going "from_color" to "to_color". By default all fields are "None" and only radial and linear gradients are supported. If we set a background image and set cover=True then the image will cover all the box area.
 ###### set_default_username(default_username)  
 	Sets the placeholder of the "username" entry to "default_username"  
 ###### set_default_server(default_server)  
@@ -16,8 +16,8 @@ This is a Lliurex specific login component for Gtk apps.
 	If the image isn't a full path then is searched in the default theme.  
 ###### set_info_banner(image,resx=72,resy=72)  
 	Sets the info box banner, by default is "None". The resolution is set to 72X72 by default.
-###### set_info_background(image=None,from_color=None,to_color=None,gradient='linear')  
-	Sets the background for the info box. It can be a system's image or gradient going "from_color" to "to_color". By default all fields are "None" and only radial and linear gradients are supported.
+###### set_info_background(image=None,cover=False,from_color=None,to_color=None,gradient='linear')  
+	Sets the background for the info box. It can be a system's image or gradient going "from_color" to "to_color". By default all fields are "None" and only radial and linear gradients are supported. If we set a background image and set cover=True then the image will cover all the box area.
 ###### set_info_text(title,subtitle,text)  
 	Sets the information to show in the info box.  
 	It must have a title, a subtitle and a text as arguments and supports markup language.
