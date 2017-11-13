@@ -18,7 +18,7 @@ except ImportError:
 import ssl
 import time
 import gettext
-import pam
+#import pam
 
 gettext.textdomain('nezumi.ui.common')
 _ = gettext.gettext
@@ -284,9 +284,9 @@ class N4dGtkLogin():
 				ret=[False,str(e)]
 		else:
 			loginMethod='PAM'
-			p=pam.pam()
-			if p.authenticate(user,pwd):
-				ret=[True]
+#			p=pam.pam()
+#			if p.authenticate(user,pwd):
+#				ret=[True]
 
 		self.spinner.stop()
 		if not ret[0]:
