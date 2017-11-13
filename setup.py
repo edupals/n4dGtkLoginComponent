@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # $Id: setup.py,v 1.32 2010/10/17 15:47:21 ghantoos Exp $
 #
@@ -24,9 +23,9 @@ from setuptools import setup, find_packages
 
 if __name__ == '__main__':
 
-    setup(name='python-n4dgtklogin',
+    setup(name='n4dgtklogin',
         version='0.1',
-        description='Python2 Gtk login component for N4D',
+        description='Python Gtk login component for N4D',
         long_description="""""",
         author='Lliurex Team',
         author_email='juanma1980@gmail.com',
@@ -37,7 +36,7 @@ if __name__ == '__main__':
         license='GPL',
         platforms='UNIX',
 #        scripts = [''],
-        package_dir = {'':'python-n4dgtklogin.install'},
+        package_dir = {'':'python3-n4dgtklogin.install'},
         packages = ['edupals.ui'],
         data_files = [],
         classifiers=[
