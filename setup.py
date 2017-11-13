@@ -36,7 +36,7 @@ if __name__ == '__main__':
         license='GPL',
         platforms='UNIX',
 #        scripts = [''],
-        package_dir = {'':'python3-n4dgtklogin.install'},
+        package_dir = {'':'src'},
         packages = ['edupals.ui'],
         data_files = [],
         classifiers=[
