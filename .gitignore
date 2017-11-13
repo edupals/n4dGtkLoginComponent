@@ -1,0 +1,9 @@
+build/
+debian/python-n4dgtklogin.debhelper.log
+debian/python-n4dgtklogin/
+debian/python3-n4dgtklogin.debhelper.log
+debian/python3-n4dgtklogin/
+debian/tmp/
+python-n4dgtklogin.install/n4dgtklogin.egg-info/
+python3-n4dgtklogin.install/n4dgtklogin.egg-info/
+
