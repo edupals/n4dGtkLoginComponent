@@ -24,7 +24,7 @@ gettext.textdomain('nezumi.ui.common')
 _ = gettext.gettext
 GObject.threads_init()
 
-class N4dGtkLogin():
+class N4dGtkLogin(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self)
 		self.sw_n4d=True

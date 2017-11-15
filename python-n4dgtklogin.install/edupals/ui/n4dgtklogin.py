@@ -24,7 +24,7 @@ gettext.textdomain('nezumi.ui.common')
 _ = gettext.gettext
 GObject.threads_init()
 
-class N4dGtkLogin():
+class N4dGtkLogin(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self)
 		self.sw_n4d=True
@@ -302,5 +302,5 @@ class N4dGtkLogin():
 	#def after_validation_func
 
 	def _n4d_connect(self,server):
-		c=xmlrpclib.ServerProxy("https://%s:9779"%server)
+		c=n4d.ServerProxy("https://%s:9779"%server)
 		return c
