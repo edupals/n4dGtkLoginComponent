@@ -2,7 +2,7 @@
 ###
 #This class returns a HBox whith a standarized login form
 ###
-import os,sys
+import os,sys,socket
 import threading
 import gi
 gi.require_version('Gtk', '3.0')
@@ -18,7 +18,6 @@ except ImportError:
 import ssl
 import time
 import gettext
-#import pam
 
 gettext.textdomain('nezumi.ui.common')
 _ = gettext.gettext
@@ -208,7 +207,6 @@ class N4dGtkLogin(threading.Thread):
 			self.txt_server.connect('activate',self._validate)
 		self.btn_sign.set_margin_top(self.default_spacing)
 		hbox.attach(self.btn_sign,0,4,1,1)
-#		self.frame.add(hbox)
 		self.sta_info=Gtk.InfoBar()
 		self.sta_info.set_show_close_button(True)
 		self.sta_info.set_message_type(Gtk.MessageType.ERROR)
@@ -267,6 +265,10 @@ class N4dGtkLogin(threading.Thread):
 		server=self.txt_server.get_text()
 		if not server:
 			server='server'
+			try:
+				socket.gethostbyname(server)
+			except:
+				server='localhost'
 		self.spinner.start()
 		self.frame.set_sensitive(False)
 		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
@@ -275,25 +277,21 @@ class N4dGtkLogin(threading.Thread):
 
 	def _t_validate(self,user,pwd,server):
 		ret=[False]
+		self.lbl_error.set_text(_("Login failed"))
 		if self.sw_n4d:
-			self.n4dclient=self._n4d_connect(server)
 			try:
-				loginMethod='N4d'
+				self.n4dclient=self._n4d_connect(server)
 				ret=self.n4dclient.validate_user(user,pwd)
-			except Exception as e:
+			except socket.error as e:
+				self.lbl_error.set_text(_("Unknown host"))
 				ret=[False,str(e)]
-		else:
-			loginMethod='PAM'
-#			p=pam.pam()
-#			if p.authenticate(user,pwd):
-#				ret=[True]
 
 		self.spinner.stop()
 		if not ret[0]:
-			self.lbl_error.show()
 			self.sta_info.show()
+			self.lbl_error.show()
 		if ret[0]:
-			self.after_validate(loginMethod,user,pwd)
+			self.after_validate(user,pwd,server)
 		#local validation
 	#def _t_validate
 
@@ -303,5 +301,14 @@ class N4dGtkLogin(threading.Thread):
 
 	def _n4d_connect(self,server):
 		context=ssl._create_unverified_context()
+		try:
+			socket.gethostbyname(server)
+		except:
+			#It could be an ip
+			try:
+				socket.inet_aton(server)
+			except Exception as e:
+				print(e)
+				raise
 		c = n4d.ServerProxy("https://"+server+":9779",context=context,allow_none=True)
 		return c
