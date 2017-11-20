@@ -26,7 +26,7 @@ This is a Lliurex specific login component for Gtk apps.
 ###### render_screen()  
 	Returns the rendered main box.
 ###### after_validation_goto()  
-	Sets the function that the loginComponent will launch after a correct user's validation  
+	Sets the function that the loginComponent will launch after a correct user's validation. User, password and server will be passed as arguments to that function.
   
 ### Examples  
 ```python  
