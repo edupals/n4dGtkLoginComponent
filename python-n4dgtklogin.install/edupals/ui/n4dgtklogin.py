@@ -75,6 +75,16 @@ class N4dGtkLogin(threading.Thread):
 				bg='background-image:url("'+image+'"); background-repeat:no-repeat; background-size:100% 100%'
 			else:
 				bg='background-image:url("'+image+'"); background-repeat:no-repeat;'
+		elif image:
+			#try to locate the image in the default theme
+			icon_theme=Gtk.IconTheme.get_default()
+			icon_sizes=icon_theme.get_icon_sizes(image)
+			if icon_sizes:
+				max_size=max(icon_sizes)
+				icon=icon_theme.lookup_icon(image,max_size,0)
+				icon_path=icon.get_filename()
+#				img.set_from_pixbuf(pixbuf)
+				bg='background-image:url("'+icon_path+'"); background-repeat:no-repeat; background-size:100% 100%'
 		else:
 			if gradient=='linear':
 				bg='background-image:-gtk-gradient (linear, left top, left bottom, from ('+from_color+'),  to ('+to_color+'))'
