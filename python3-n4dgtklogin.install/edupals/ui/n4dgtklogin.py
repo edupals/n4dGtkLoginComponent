@@ -302,7 +302,7 @@ class N4dGtkLogin(threading.Thread):
 			self.sta_info.show()
 			self.lbl_error.show()
 		if ret[0]:
-			self.after_validate(user,pwd,server)
+			GLib.idle_add(self.after_validate,user,pwd,server)
 		#local validation
 	#def _t_validate
 
