@@ -1,6 +1,8 @@
 # n4dGtkLogincomponent
 This is a Lliurex specific login component for Gtk apps.  
 ### API  
+###### set_allowed_groups(groups=[])
+	Login only will be succesfull if user belongs to any of this groups.
 ###### set_mw_proportion_ratio(columns_left,columns_right)  
 	Sets the portion of screen reserved to each component (info and login form). It works splitting the main window in (columns_left+columns_right) columns and asigning to each part the desired number of columns. By default the proportion is set to 2:1
 ###### set_mw_background(image=None,cover=False,from_color=None,to_color=None,gradient='linear')  
@@ -21,10 +23,12 @@ This is a Lliurex specific login component for Gtk apps.
 ###### set_info_text(title,subtitle,text)  
 	Sets the information to show in the info box.  
 	It must have a title, a subtitle and a text as arguments and supports markup language.
+###### hide_server_entry()  
+	Hides the entry field of the login form
+###### hide_info_box()  
+	Hides the info box form
 ###### get_action_area()  
 	Returns the info box so we can add any widget to it.  
-###### render_screen()  
-	Returns the rendered main box.
 ###### after_validation_goto()  
 	Sets the function that the loginComponent will launch after a correct user's validation. User, password and server will be passed as arguments to that function.
   
@@ -42,7 +46,6 @@ def _signin():
   
 def start_gui():  
 	mw=Gtk.Window()  
-	box=Gtk.Box()  
 	loginComponent=N4dGtkLogin() #Init the login component  
 	loginComponent.set_info_text("<span foreground='black'>Title</span>","Subtitle","Text text text.\nText text text:\n<sub>* text with sub tag</sub>")  
 	#Uncomment and comment...
@@ -69,11 +72,8 @@ def start_gui():
 	#loginComponent.set_info_banner('/usr/share/filezilla/resources/flatzilla/24x24/folder.png')  
 	##- Function that will be launched after a succesfull validation
 	loginComponent.after_validation_goto(_signin)  
-	##- Render the form
-	loginBox=loginComponent.render_form()
 	##
-	box.add(loginBox)  
-	mw.add(box)  
+	mw.add(loginComponent)
 	mw.connect("delete-event",Gtk.main_quit)  
 	mw.show_all()  
   
