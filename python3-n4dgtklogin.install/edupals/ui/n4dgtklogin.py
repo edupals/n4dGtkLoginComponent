@@ -311,7 +311,7 @@ class N4dGtkLogin(threading.Thread):
 		if not ret[0]:
 			self.sta_info.show()
 			self.lbl_error.show()
-		elif self.allowed_groups and not set(ret[1].intersection(self.allowed_groups)):
+		elif self.allowed_groups and not set(self.allowed_groups).intersection(ret[1]):
 			#Check user groups
 			self.lbl_error.set_text(_("User not allowed"))
 			self.sta_info.show()
