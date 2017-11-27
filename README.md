@@ -2,7 +2,7 @@
 This is a Lliurex specific login component for Gtk apps.  
 ### API  
 ###### set_allowed_groups(groups=[])
-	Login only will be succesfull if user belongs to any of this groups.
+	Login only will be successfull if user belongs to any of the provided groups.
 ###### set_mw_proportion_ratio(columns_left,columns_right)  
 	Sets the portion of screen reserved to each component (info and login form). It works splitting the main window in (columns_left+columns_right) columns and asigning to each part the desired number of columns. By default the proportion is set to 2:1
 ###### set_mw_background(image=None,cover=False,from_color=None,to_color=None,gradient='linear')  
