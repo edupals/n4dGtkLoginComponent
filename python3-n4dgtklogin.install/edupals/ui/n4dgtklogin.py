@@ -19,7 +19,7 @@ import ssl
 import time
 import gettext
 
-gettext.textdomain('nezumi.ui.common')
+gettext.textdomain('edupals.ui.common')
 _ = gettext.gettext
 GObject.threads_init()
 
@@ -50,11 +50,17 @@ class N4dGtkLogin(threading.Thread):
 		self.sw_info=False
 		self.left_span=2
 		self.right_span=1
+		self.allowed_groups=[]
 	#def __init__
+
+	def set_allowed_groups(self,groups):
+		self.allowed_groups=groups
+	#def set_allowed_groups
 
 	def set_mw_proportion_ratio(self,left_span,right_span):
 		self.left_span=left_span
 		self.right_span=right_span
+	#def set_mw_proportion_ratio
 	
 	def set_mw_background(self,image=None,cover=False,from_color='#ffffff',to_color='silver',gradient='linear'):
 		self.mw_background=self._set_background(image,cover,from_color,to_color,gradient)
@@ -92,6 +98,7 @@ class N4dGtkLogin(threading.Thread):
 			elif gradient=='radial':
 				bg='background-image:-gtk-gradient (radial, center center,0,center center,1, from ('+from_color+'),  to ('+to_color+'))'
 		return bg
+	#def _set_background
 
 	def set_default_username(self,username):
 		self.username_placeholder=username
@@ -114,6 +121,7 @@ class N4dGtkLogin(threading.Thread):
 			sw_ok=True
 			self.set_login_banner(os.path.expanduser('~/.face'))
 		return sw_ok
+	#def _lookup_user_face
 
 	def set_login_banner(self,banner):
 		self.login_banner=self._get_image(banner)
@@ -133,6 +141,7 @@ class N4dGtkLogin(threading.Thread):
 				pixbuf=GdkPixbuf.Pixbuf.new_from_file_at_scale(image,x,y,True)
 				img.set_from_pixbuf(pixbuf)
 		return img
+	#def _get_image
 	
 	def set_info_text(self,title,subtitle,text):
 		sw_ok=True
@@ -149,6 +158,7 @@ class N4dGtkLogin(threading.Thread):
 	def get_action_area(self):
 		self.sw_info=True
 		return self.info_box
+	#def get_action_area
 
 	def render_form(self,show_server=True):
 		mw_box=Gtk.Box(spacing=0,orientation=Gtk.Orientation.HORIZONTAL)
@@ -301,7 +311,12 @@ class N4dGtkLogin(threading.Thread):
 		if not ret[0]:
 			self.sta_info.show()
 			self.lbl_error.show()
-		if ret[0]:
+		elif self.allowed_groups and not set(ret[1].intersection(self.allowed_groups)):
+			#Check user groups
+			self.lbl_error.set_text(_("User not allowed"))
+			self.sta_info.show()
+			self.lbl_error.show()
+		else:
 			GLib.idle_add(self.after_validate,user,pwd,server)
 		#local validation
 	#def _t_validate
@@ -323,3 +338,4 @@ class N4dGtkLogin(threading.Thread):
 				raise
 		c = n4d.ServerProxy("https://"+server+":9779",context=context,allow_none=True)
 		return c
+	#def _n4d_connect
