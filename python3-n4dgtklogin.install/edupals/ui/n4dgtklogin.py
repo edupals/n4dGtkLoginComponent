@@ -27,7 +27,6 @@ class N4dGtkLogin(Gtk.Box):
 	__gtype_name__='n4dgtklogin'
 
 	def __init__(self,*args,**kwds):
-			#		threading.Thread.__init__(self)
 		super().__init__(*args,**kwds)
 		self.sw_n4d=True
 		if hasattr(sys,'last_value'):
