@@ -163,6 +163,7 @@ class N4dGtkLogin(Gtk.Box):
 			sw_ok=False
 			print(e)
 		self.lbl_info_msg.set_markup(info_msg)
+		self.lbl_info_msg.show()
 		return sw_ok
 	#def set_info_text
 
@@ -262,6 +263,8 @@ class N4dGtkLogin(Gtk.Box):
 		info_detail_box.pack_start(self.lbl_info_msg,True,True,0)
 		self.css_classes['#label']='{background-color:rgba(200,200,200,0.8);;}'
 		self.lbl_info_msg.set_name("label")
+		self.lbl_info_msg.set_no_show_all(True)
+		self.lbl_info_msg.hide()
 		self.info_box.set_name("info")
 		info_detail_box.props.valign=Gtk.Align.CENTER
 		info_detail_box.props.halign=Gtk.Align.CENTER
