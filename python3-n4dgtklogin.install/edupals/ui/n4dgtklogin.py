@@ -307,7 +307,7 @@ class N4dGtkLogin(Gtk.Box):
 				self.n4dclient=self._n4d_connect(server)
 				ret=self.n4dclient.validate_user(user,pwd)
 			except socket.error as e:
-				self.lbl_error.set_text(_("Unknown host %s"%server))
+				self.lbl_error.set_text(_("Unknown host")+' '+str(server))
 				ret=[False,str(e)]
 
 		self.spinner.stop()
