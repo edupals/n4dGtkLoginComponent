@@ -307,13 +307,16 @@ class N4dGtkLogin(Gtk.Box):
 				self.n4dclient=self._n4d_connect(server)
 				ret=self.n4dclient.validate_user(user,pwd)
 			except socket.error as e:
-				self.lbl_error.set_text(_("Unknown host"))
+				self.lbl_error.set_text(_("Unknown host %s"%server))
 				ret=[False,str(e)]
 
 		self.spinner.stop()
 		if not ret[0]:
 			self.sta_info.show()
 			self.lbl_error.show()
+			#show server entry if we can't connect to n4d in "server"
+			self.txt_server.props.no_show_all=False
+			self.txt_server.show()
 		elif self.allowed_groups and not set(self.allowed_groups).intersection(ret[1]):
 			#Check user groups
 			self.lbl_error.set_text(_("User not allowed"))
