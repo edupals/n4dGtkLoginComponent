@@ -27,6 +27,10 @@ class N4dGtkLogin(Gtk.Box):
 
 	def __init__(self,*args,**kwds):
 		super(Gtk.Box,self).__init__(*args,**kwds)
+		self.vertical=False
+		if 'orientation' in kwds.keys():
+			if kwds['orientation']==Gtk.Orientation.VERTICAL:
+				self.vertical=True
 		self.sw_n4d=True
 		if hasattr(sys,'last_value'):
 		#If there's any error at this point it only could be an ImportError caused by xmlrpc
@@ -46,7 +50,7 @@ class N4dGtkLogin(Gtk.Box):
 		self.main_grid=Gtk.Grid()
 		self.render_form()
 	#def __init__
-
+	
 	def set_allowed_groups(self,groups):
 		self.allowed_groups=groups
 	#def set_allowed_groups
@@ -54,8 +58,12 @@ class N4dGtkLogin(Gtk.Box):
 	def set_mw_proportion_ratio(self,left_panel,right_panel):
 		for child in self.main_grid.get_children():
 			self.main_grid.remove(child)
-		self.main_grid.attach(self.info_box,0,0,left_panel,1)
-		self.main_grid.attach(self.form_box,0+left_panel,0,right_panel,1)
+		if self.vertical:
+			self.main_grid.attach(self.info_box,0,0,1,left_panel)
+			self.main_grid.attach(self.form_box,0,0+left_panel,1,right_panel)
+		else:
+			self.main_grid.attach(self.info_box,0,0,left_panel,1)
+			self.main_grid.attach(self.form_box,0+left_panel,0,right_panel,1)
 	#def set_mw_proportion_ratio
 	
 	def set_mw_background(self,image=None,cover=False,from_color='#ffffff',to_color='silver',gradient='linear'):
@@ -187,8 +195,12 @@ class N4dGtkLogin(Gtk.Box):
 		self.main_grid.set_row_homogeneous(True)
 		self._render_login_form()
 		self._render_info_form()
-		self.main_grid.attach(self.info_box,1,1,2,1)
-		self.main_grid.attach(self.form_box,3,1,1,1)
+		if self.vertical:
+			self.main_grid.attach(self.info_box,1,1,1,1)
+			self.main_grid.attach(self.form_box,1,3,1,1)
+		else:
+			self.main_grid.attach(self.info_box,1,1,2,1)
+			self.main_grid.attach(self.form_box,3,1,1,1)
 		self.pack_start(self.main_grid,True,True,0)
 		self.set_name("mw")
 		self.form_box.set_name("main")
