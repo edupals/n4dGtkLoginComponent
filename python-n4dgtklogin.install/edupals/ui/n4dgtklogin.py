@@ -149,6 +149,7 @@ class N4dGtkLogin(Gtk.Box):
 	#def set_info_banner
 
 	def _get_image(self,image,x=72,y=72):
+		pixbuf=None
 		icon_theme=Gtk.IconTheme.get_default()
 		if icon_theme.has_icon(image):
 			pixbuf=icon_theme.load_icon(image,x,0)
