@@ -1,3 +1,9 @@
+python-n4dgtklogin (0.4.6) xenial; urgency=medium
+
+  * Fix loading pixbuf
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 02 Oct 2018 17:18:36 +0200
+
 python-n4dgtklogin (0.4.5) bionic; urgency=medium
 
   * Bionic release
