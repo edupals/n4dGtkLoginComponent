@@ -1,3 +1,9 @@
+python-n4dgtklogin (0.4.5) bionic; urgency=medium
+
+  * Bionic release
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 02 Oct 2018 17:01:41 +0200
+
 python-n4dgtklogin (0.4.4) xenial; urgency=medium
 
   * Added vertical orientation 
