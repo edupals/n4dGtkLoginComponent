@@ -1,0 +1,95 @@
+python-n4dgtklogin (0.4.4) xenial; urgency=medium
+
+  * Added vertical orientation 
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 21 Jun 2018 14:55:38 +0200
+
+python-n4dgtklogin (0.4.3.1) xenial; urgency=medium
+
+  * Added "server" to unknown host message
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 13 Mar 2018 14:34:44 +0100
+
+python-n4dgtklogin (0.4.3) xenial; urgency=medium
+
+  * Show server entry, although it has been hidden, when login can't connect to n4d at specified server
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 13 Mar 2018 14:13:13 +0100
+
+python-n4dgtklogin (0.4.2) xenial; urgency=medium
+
+  * Hide info label when there's no text to show
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 30 Nov 2017 09:05:41 +0100
+
+python-n4dgtklogin (0.4.1) xenial; urgency=medium
+
+  * Fix python2 init
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 28 Nov 2017 13:37:37 +0100
+
+python-n4dgtklogin (0.4) xenial; urgency=medium
+
+  * Change API 
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Mon, 27 Nov 2017 17:11:03 +0100
+
+python-n4dgtklogin (0.3.3) xenial; urgency=medium
+
+  * Use GLib for function call
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 23 Nov 2017 12:44:18 +0100
+
+python-n4dgtklogin (0.3.2) xenial; urgency=medium
+
+  * Add icon from theme as background
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 21 Nov 2017 13:58:29 +0100
+
+python-n4dgtklogin (0.3.1) xenial; urgency=medium
+
+  * add handler for socket exceptions
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Mon, 20 Nov 2017 10:09:33 +0100
+
+python-n4dgtklogin (0.3) xenial; urgency=medium
+
+  * Fix build
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 16 Nov 2017 14:34:20 +0100
+
+python-n4dgtklogin (0.2-lliurex4) xenial; urgency=medium
+
+  * Changed text domain to edupals
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 16 Nov 2017 12:26:36 +0100
+
+python-n4dgtklogin (0.2-lliurex3) xenial; urgency=medium
+
+  * Fix class init
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Wed, 15 Nov 2017 11:47:17 +0100
+
+python-n4dgtklogin (0.2-lliurex2) xenial; urgency=medium
+
+  * Added edupals-base as dependency
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 14 Nov 2017 14:46:34 +0100
+
+python-n4dgtklogin (0.2-lliurex1) xenial; urgency=medium
+
+  * Disabled pam
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Mon, 13 Nov 2017 16:42:40 +0100
+
+python-n4dgtklogin (0.2) xenial; urgency=medium
+
+  * Added python2 support
+
+ -- lliurex <lliurex@localhost.localdomain>  Mon, 13 Nov 2017 08:48:43 +0100
+
+python-n4dgtklogin (0.1) xenial; urgency=medium
+
+  * Initial release. 
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 20 Oct 2017 09:38:27 +0200
