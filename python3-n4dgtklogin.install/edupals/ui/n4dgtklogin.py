@@ -28,6 +28,7 @@ class N4dGtkLogin(Gtk.Box):
 
 	def __init__(self,*args,**kwds):
 		super().__init__(*args,**kwds)
+		self.dbg=True
 		self.vertical=False
 		if 'orientation' in kwds.keys():
 			if kwds['orientation']==Gtk.Orientation.VERTICAL:
@@ -52,6 +53,10 @@ class N4dGtkLogin(Gtk.Box):
 		self.render_form()
 	#def __init__
 
+	def _debug(self,msg):
+		if self.dbg:
+			print("%s",msg)
+
 	def set_allowed_groups(self,groups):
 		self.allowed_groups=groups
 	#def set_allowed_groups
@@ -60,8 +65,11 @@ class N4dGtkLogin(Gtk.Box):
 		for child in self.main_grid.get_children():
 			self.main_grid.remove(child)
 		if self.vertical:
-			self.main_grid.attach(self.info_box,0,0,1,left_panel)
-			self.main_grid.attach(self.form_box,0,0+left_panel,1,right_panel)
+#			self.main_grid.attach(self.info_box,0,0,1,left_panel)
+#			self.main_grid.attach(self.form_box,0,0+left_panel,1,right_panel)
+			self.main_grid.attach(self.form_box,0,0,1,left_panel)
+			self.main_grid.attach(self.info_box,0,0+left_panel,1,right_panel)
+			self.main_grid.set_margin_bottom(12)
 		else:
 			self.main_grid.attach(self.info_box,0,0,left_panel,1)
 			self.main_grid.attach(self.form_box,0+left_panel,0,right_panel,1)
@@ -101,6 +109,7 @@ class N4dGtkLogin(Gtk.Box):
 			else:
 				bg='background-image:url("'+image+'"); background-repeat:no-repeat;'
 		elif image:
+			self._debug("%s not found. Searching..."%image)
 			#try to locate the image in the default theme
 			icon_theme=Gtk.IconTheme.get_default()
 			icon_sizes=icon_theme.get_icon_sizes(image)
@@ -141,8 +150,13 @@ class N4dGtkLogin(Gtk.Box):
 		return sw_ok
 	#def _lookup_user_face
 
-	def set_login_banner(self,banner):
-		self.login_banner.set_from_pixbuf(self._get_image(banner))
+	def set_login_banner(self,image=None):
+		avatar=None
+		if image:
+			avatar=self._get_image(image)
+			if avatar==None:
+				avatar=self._get_image("avatar-default")
+			self.login_banner.set_from_pixbuf(avatar)
 	#def set_banner
 
 	def set_info_banner(self,banner,x=72,y=72):
@@ -167,7 +181,7 @@ class N4dGtkLogin(Gtk.Box):
 		self.lbl_info_msg.set_max_width_chars(25)
 		try:
 			msg="<b><big>"+title+"</big></b>"
-			info_msg=msg+'\n'+subtitle+'\n\n'+text
+			info_msg=msg+'\n'+subtitle+'\n'+text
 		except Exception as e:
 			sw_ok=False
 			print(e)
@@ -198,8 +212,9 @@ class N4dGtkLogin(Gtk.Box):
 		self._render_login_form()
 		self._render_info_form()
 		if self.vertical:
-			self.main_grid.attach(self.info_box,1,1,1,1)
-			self.main_grid.attach(self.form_box,1,3,1,1)
+			self.main_grid.attach(self.form_box,1,1,1,1)
+			self.main_grid.attach(self.info_box,1,3,1,1)
+			self.main_grid.set_margin_bottom(12)
 		else:
 			self.main_grid.attach(self.info_box,1,1,2,1)
 			self.main_grid.attach(self.form_box,3,1,1,1)
@@ -224,32 +239,46 @@ class N4dGtkLogin(Gtk.Box):
 		self.txt_server.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY,"server")
 		self.btn_sign=Gtk.Button(stock=Gtk.STOCK_OK)
 		self.btn_sign.connect('clicked',self._validate)
+		self.btn_sign.set_halign(Gtk.Align.CENTER)
 		self.frame=Gtk.Frame()
 		
 		self.frame.set_shadow_type(Gtk.ShadowType.OUT)   
 		login_grid=Gtk.Grid()
+		login_grid.set_column_spacing(6)
+		login_grid.set_row_spacing(6)
 		login_grid.set_margin_left(self.default_spacing)
 		login_grid.set_margin_right(self.default_spacing)
 		login_grid.set_margin_top(self.default_spacing)
 		login_grid.set_margin_bottom(self.default_spacing)
 		self.spinner=Gtk.Spinner()
+		self.spinner.set_no_show_all(True)
 		color=Gdk.Color(0,0,1)
 		self.spinner.modify_bg(Gtk.StateType.NORMAL,color)
 		login_grid.attach(self.spinner,0,1,1,5)
-		login_grid.attach(self.login_banner,0,0,1,1)
+		if self.vertical:
+			position=Gtk.PositionType.RIGHT
+		else:
+			position=Gtk.PositionType.BOTTOM
+
 		login_grid.attach(self.txt_username,0,1,1,1)
 		self._set_widget_default_props(self.txt_username,_("Username"))
 		self.txt_username.connect('activate',self._validate)
-		login_grid.attach(self.txt_password,0,2,1,1)
+		login_grid.attach_next_to(self.txt_password,self.txt_username,position,1,1)
 		self._set_widget_default_props(self.txt_password,_("Password"))
 		self.txt_password.set_visibility(False)
 		self.txt_password.props.caps_lock_warning=True
 		self.txt_password.connect('activate',self._validate)
-		login_grid.attach(self.txt_server,0,3,1,1)
 		self._set_widget_default_props(self.txt_server,_("Master Server IP"))
+		if self.vertical:
+			self.txt_server.set_halign(Gtk.Align.FILL)
+			self.txt_server.set_hexpand(True)
+			login_grid.attach_next_to(self.txt_server,self.txt_username,Gtk.PositionType.BOTTOM,2,1)
+		else:
+			login_grid.attach_next_to(self.txt_server,self.txt_password,Gtk.PositionType.BOTTOM,1,1)
 		self.txt_server.connect('activate',self._validate)
 		self.btn_sign.set_margin_top(self.default_spacing)
-		login_grid.attach(self.btn_sign,0,4,1,1)
+		login_grid.attach_next_to(self.btn_sign,self.txt_server,Gtk.PositionType.BOTTOM,3,1)
+		login_grid.attach(self.login_banner,0,0,3,1)
 		self.sta_info=Gtk.InfoBar()
 		self.sta_info.set_show_close_button(True)
 		self.sta_info.set_message_type(Gtk.MessageType.ERROR)
@@ -258,8 +287,12 @@ class N4dGtkLogin(Gtk.Box):
 		self.sta_info.set_visible(False)
 		self.sta_info.set_no_show_all(True)
 		self.sta_info.connect('response',self._status_info_hide)
-		self.sta_info.set_valign(True)
-		login_grid.props.valign=Gtk.Align.CENTER
+		if self.vertical:
+			login_grid.props.valign=Gtk.Align.END
+			login_grid.set_margin_bottom(0)
+			self.btn_sign.set_margin_bottom(0)
+		else:
+			login_grid.props.valign=Gtk.Align.CENTER
 		login_grid.props.halign=Gtk.Align.CENTER
 		self.form_box.pack_start(self.sta_info,False,True,0)
 		self.form_box.pack_start(login_grid,True,True,0)
@@ -274,16 +307,30 @@ class N4dGtkLogin(Gtk.Box):
 		self.lbl_info_msg.set_use_markup(True)
 		self.lbl_info_msg.set_line_wrap(True)
 		info_detail_box.pack_start(self.lbl_info_msg,True,True,0)
-		self.css_classes['#label']='{background-color:rgba(200,200,200,0.8);;}'
+		if not '#label' in self.css_classes.keys():
+			self.css_classes['#label']='{background-color:rgba(200,200,200,0.8);;}'
 		self.lbl_info_msg.set_name("label")
 		self.lbl_info_msg.set_no_show_all(True)
 		self.lbl_info_msg.hide()
 		self.info_box.set_name("info")
-		info_detail_box.props.valign=Gtk.Align.CENTER
-		info_detail_box.props.halign=Gtk.Align.CENTER
-		self.info_box.pack_start(info_detail_box,True,True,0)
+		if self.vertical:
+#			self.lbl_info_msg.props.halign=Gtk.Align.FILL
+			self.lbl_info_msg.set_justify(Gtk.Justification.CENTER)
+			self.lbl_info_msg.set_margin_left(12)
+			self.lbl_info_msg.set_margin_right(12)
+			info_detail_box.props.valign=Gtk.Align.START
+		else:
+			info_detail_box.props.valign=Gtk.Align.CENTER
+			info_detail_box.props.halign=Gtk.Align.CENTER
+		if self.vertical:
+			self.info_box.pack_start(info_detail_box,False,False,0)
+		else:
+			self.info_box.pack_start(info_detail_box,True,True,0)
 		self._set_css()
 	#def _render_info_form
+
+	def set_label_background(self,r,g,b,a):
+		self.css_classes['#label']='{background-color:rgba(%s,%s,%s,%s);;}'%(r,g,b,a)
 
 	def _set_widget_default_props(self,widget,tooltip=None):
 		widget.set_valign(True)
@@ -306,6 +353,7 @@ class N4dGtkLogin(Gtk.Box):
 				socket.gethostbyname(server)
 			except:
 				server='localhost'
+		self.spinner.show()
 		self.spinner.start()
 		self.frame.set_sensitive(False)
 		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
@@ -324,6 +372,7 @@ class N4dGtkLogin(Gtk.Box):
 				ret=[False,str(e)]
 
 		self.spinner.stop()
+		self.spinner.hide()
 		if not ret[0]:
 			self.sta_info.show()
 			self.lbl_error.show()
