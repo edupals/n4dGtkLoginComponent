@@ -1,6 +1,6 @@
-python-n4dgtklogin (0.4.6) xenial; urgency=medium
+python-n4dgtklogin (0.4.6.2) bionic; urgency=medium
 
-  * Fix loading pixbuf
+  * Svn sync
 
  -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 02 Oct 2018 17:18:36 +0200
 
