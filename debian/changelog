@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 python-n4dgtklogin (0.4.6.2) bionic; urgency=medium
-=======
-python-n4dgtklogin (0.4.6.1) xenial; urgency=medium
->>>>>>> 0ae147e73f5cf554ca34b8601994799f94965f4d
 
   * Svn sync
 
