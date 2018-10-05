@@ -253,7 +253,7 @@ class N4dGtkLogin(Gtk.Box):
 		self.spinner=Gtk.Spinner()
 		self.spinner.set_no_show_all(True)
 		color=Gdk.Color(0,0,1)
-		self.spinner.modify_bg(Gtk.StateType.NORMAL,color)
+#		self.spinner.modify_bg(Gtk.StateType.NORMAL,color)
 		login_grid.attach(self.spinner,0,1,1,5)
 		if self.vertical:
 			position=Gtk.PositionType.RIGHT
