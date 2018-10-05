@@ -1,3 +1,9 @@
+python-n4dgtklogin (0.4.6.3) bionic; urgency=medium
+
+  * Fix spinner bg
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 05 Oct 2018 10:22:40 +0200
+
 python-n4dgtklogin (0.4.6.2) bionic; urgency=medium
 
   * Svn sync
