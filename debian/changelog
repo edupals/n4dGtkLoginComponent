@@ -1,10 +1,6 @@
-python-n4dgtklogin (0.4.6.3) bionic; urgency=medium
+python-n4dgtklogin (0.4.6.4) bionic; urgency=medium
 
-<<<<<<< HEAD
   * Fix spin position
-
- -- Juanma Navarro Mañez <juanma1980@gmail.com>  Mon, 19 Nov 2018 13:40:58 +0100
-=======
   * Fix spinner bg
 
  -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 05 Oct 2018 10:22:40 +0200
