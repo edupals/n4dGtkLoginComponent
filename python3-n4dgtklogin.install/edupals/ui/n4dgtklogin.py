@@ -37,7 +37,7 @@ class N4dGtkLogin(Gtk.Box):
 		if hasattr(sys,'last_value'):
 		#If there's any error at this point it only could be an ImportError caused by xmlrpc
 			self.sw_n4d=False
-		self.css_classes={}
+		self.css_classes={'#GtkEntry':'{font-family: Roboto;border:0px;border-bottom:1px grey solid;margin-top:0px;padding-top:0px;}'}
 		self.style_provider=Gtk.CssProvider()
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),self.style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 		self.default_spacing=12
@@ -225,6 +225,7 @@ class N4dGtkLogin(Gtk.Box):
 
 	def _render_login_form(self):
 		self.txt_username=Gtk.Entry()
+		self.txt_username.set_name("GtkEntry")
 		self.login_banner=Gtk.Image()
 		if not self._lookup_user_face():
 			self.set_login_banner(self.login_banner_default)
@@ -232,9 +233,11 @@ class N4dGtkLogin(Gtk.Box):
 		self.set_default_username(self.username_placeholder)
 		self.txt_username.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY,"emblem-personal")
 		self.txt_password=Gtk.Entry()
+		self.txt_password.set_name("GtkEntry")
 		self.txt_password.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY,"badge-small")
 		self._set_text_for_entry(self.txt_password,_("Password"))
 		self.txt_server=Gtk.Entry()
+		self.txt_server.set_name("GtkEntry")
 		self.set_default_server(self.server_placeholder)
 		self.txt_server.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY,"server")
 		self.btn_sign=Gtk.Button(stock=Gtk.STOCK_OK)
@@ -254,7 +257,7 @@ class N4dGtkLogin(Gtk.Box):
 		self.spinner.set_no_show_all(True)
 		color=Gdk.Color(0,0,1)
 #		self.spinner.modify_bg(Gtk.StateType.NORMAL,color)
-		login_grid.attach(self.spinner,0,1,1,5)
+		login_grid.attach(self.spinner,0,1,2,5)
 		if self.vertical:
 			position=Gtk.PositionType.RIGHT
 		else:
