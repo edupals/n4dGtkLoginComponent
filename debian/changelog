@@ -6,6 +6,7 @@ python-n4dgtklogin (0.4.6.4) bionic; urgency=medium
 
 python-n4dgtklogin (0.4.6.3) bionic; urgency=medium
 
+  * Fix spin position
   * Fix spinner bg
 
  -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 05 Oct 2018 10:22:40 +0200
