@@ -1,3 +1,9 @@
+python-n4dgtklogin (0.4.7) bionic; urgency=medium
+
+  * Update textfield icons
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 28 Feb 2019 14:03:28 +0100
+
 python-n4dgtklogin (0.4.6.4) bionic; urgency=medium
 
   * Fix css for GtkEntry
