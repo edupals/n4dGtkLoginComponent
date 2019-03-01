@@ -4,6 +4,7 @@
 ###
 import os,sys,socket
 import threading
+import netifaces 
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
@@ -350,12 +351,21 @@ class N4dGtkLogin(Gtk.Box):
 		user=self.txt_username.get_text()
 		pwd=self.txt_password.get_text()
 		server=self.txt_server.get_text()
+		server_ip=''
 		if not server:
 			server='server'
-			try:
-				socket.gethostbyname(server)
-			except:
-				server='localhost'
+		try:
+			server_ip=socket.gethostbyname(server)
+		except:
+			server='localhost'
+		#Check if localhost is server
+		for iface in netifaces.interfaces():
+			for key,netinfo in netifaces.ifaddresses(iface).items():
+				for info in netinfo:
+					if info['addr']==server_ip:
+						server='localhost'
+						break
+
 		self.spinner.show()
 		self.spinner.start()
 		self.frame.set_sensitive(False)
