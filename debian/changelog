@@ -1,3 +1,9 @@
+python-n4dgtklogin (0.5) bionic; urgency=medium
+
+  * Check if localhost is also main server
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 01 Mar 2019 13:50:39 +0100
+
 python-n4dgtklogin (0.4.7) bionic; urgency=medium
 
   * Update textfield icons
