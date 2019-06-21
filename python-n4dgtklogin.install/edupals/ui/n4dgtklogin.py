@@ -1,9 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ###
 #This class returns a login_grid whith a standarized login form
 ###
 import os,sys,socket
 import threading
+import netifaces 
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
@@ -28,6 +29,7 @@ class N4dGtkLogin(Gtk.Box):
 	def __init__(self,*args,**kwds):
 		super(Gtk.Box,self).__init__(*args,**kwds)
 		self.dbg=True
+		self.msgCount=0
 		self.vertical=False
 		if 'orientation' in kwds.keys():
 			if kwds['orientation']==Gtk.Orientation.VERTICAL:
@@ -64,8 +66,6 @@ class N4dGtkLogin(Gtk.Box):
 		for child in self.main_grid.get_children():
 			self.main_grid.remove(child)
 		if self.vertical:
-#			self.main_grid.attach(self.info_box,0,0,1,left_panel)
-#			self.main_grid.attach(self.form_box,0,0+left_panel,1,right_panel)
 			self.main_grid.attach(self.form_box,0,0,1,left_panel)
 			self.main_grid.attach(self.info_box,0,0+left_panel,1,right_panel)
 			self.main_grid.set_margin_bottom(12)
@@ -192,7 +192,22 @@ class N4dGtkLogin(Gtk.Box):
 	def hide_server_entry(self):
 		self.txt_server.props.no_show_all=True
 		self.txt_server.hide()
+		return True
 	#def hide_server_entry
+
+	def show_info(self,msg):
+		if self.msgCount<3:
+			self.msgCount+=1
+		elif self.rev_info.get_reveal_child():
+			self.rev_info.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
+			self.rev_info.set_reveal_child(False)
+			self.msgCount=0
+			return False
+		else:
+			self.rev_info.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+			self.rev_info.set_reveal_child(True)
+		return True
+    #def show_info
 
 	def hide_info_box(self):
 		self.info_box.props.no_show_all=True
@@ -204,8 +219,15 @@ class N4dGtkLogin(Gtk.Box):
 	#def get_action_area
 
 	def render_form(self):
+		self.scr=Gtk.ScrolledWindow()
+		self.scr.set_policy(Gtk.PolicyType.AUTOMATIC,Gtk.PolicyType.AUTOMATIC)
+		self.scr.set_propagate_natural_height(True)
+		self.scr.set_propagate_natural_width(True)
+		sb=self.scr.get_vscrollbar()
+		sb.hide()
 		self.main_grid.set_hexpand(True)
 		self.main_grid.set_vexpand(True)
+
 		self.main_grid.set_column_homogeneous(True)
 		self.main_grid.set_row_homogeneous(True)
 		self._render_login_form()
@@ -217,7 +239,9 @@ class N4dGtkLogin(Gtk.Box):
 		else:
 			self.main_grid.attach(self.info_box,1,1,2,1)
 			self.main_grid.attach(self.form_box,3,1,1,1)
-		self.pack_start(self.main_grid,True,True,0)
+		self.scr.add(self.main_grid)
+		self.scr.set_valign(Gtk.Align.START)
+		self.pack_start(self.scr,False,False,0)
 		self.set_name("mw")
 		self.form_box.set_name("main")
 	#def render_form
@@ -242,9 +266,6 @@ class N4dGtkLogin(Gtk.Box):
 		self.btn_sign=Gtk.Button(stock=Gtk.STOCK_OK)
 		self.btn_sign.connect('clicked',self._validate)
 		self.btn_sign.set_halign(Gtk.Align.CENTER)
-		self.frame=Gtk.Frame()
-		
-		self.frame.set_shadow_type(Gtk.ShadowType.OUT)   
 		login_grid=Gtk.Grid()
 		login_grid.set_column_spacing(6)
 		login_grid.set_row_spacing(6)
@@ -253,15 +274,13 @@ class N4dGtkLogin(Gtk.Box):
 		login_grid.set_margin_top(self.default_spacing)
 		login_grid.set_margin_bottom(self.default_spacing)
 		self.spinner=Gtk.Spinner()
-		self.spinner.set_no_show_all(True)
-		color=Gdk.Color(0,0,1)
-#		self.spinner.modify_bg(Gtk.StateType.NORMAL,color)
-		login_grid.attach(self.spinner,0,1,2,5)
+		self.spinner.set_name("spinner")
 		if self.vertical:
 			position=Gtk.PositionType.RIGHT
 		else:
 			position=Gtk.PositionType.BOTTOM
 
+		login_grid.attach(self.spinner,0,1,2,5)
 		login_grid.attach(self.txt_username,0,1,1,1)
 		self._set_widget_default_props(self.txt_username,_("Username"))
 		self.txt_username.connect('activate',self._validate)
@@ -281,14 +300,16 @@ class N4dGtkLogin(Gtk.Box):
 		self.btn_sign.set_margin_top(self.default_spacing)
 		login_grid.attach_next_to(self.btn_sign,self.txt_server,Gtk.PositionType.BOTTOM,3,1)
 		login_grid.attach(self.login_banner,0,0,3,1)
-		self.sta_info=Gtk.InfoBar()
-		self.sta_info.set_show_close_button(True)
-		self.sta_info.set_message_type(Gtk.MessageType.ERROR)
+		self.rev_info=Gtk.Revealer()
+		self.rev_info.set_transition_duration(1000)
+		self.rev_info.set_valign(Gtk.Align.START)
+		self.rev_info.set_name("revealer")
+		if not '#revealer' in self.css_classes.keys():
+				self.css_classes['#revealer']='{background-color:red;color:white;padding:3px;}'
 		self.lbl_error=Gtk.Label(_("Login failed"))
-		self.sta_info.get_action_area().add(self.lbl_error)
-		self.sta_info.set_visible(False)
-		self.sta_info.set_no_show_all(True)
-		self.sta_info.connect('response',self._status_info_hide)
+		self.lbl_error.set_name("revealer")
+		self.rev_info.add(self.lbl_error)
+		login_grid.attach(self.rev_info,0,0,3,1)
 		if self.vertical:
 			login_grid.props.valign=Gtk.Align.END
 			login_grid.set_margin_bottom(0)
@@ -296,7 +317,6 @@ class N4dGtkLogin(Gtk.Box):
 		else:
 			login_grid.props.valign=Gtk.Align.CENTER
 		login_grid.props.halign=Gtk.Align.CENTER
-		self.form_box.pack_start(self.sta_info,False,True,0)
 		self.form_box.pack_start(login_grid,True,True,0)
 	#def _render_login_form
 
@@ -316,7 +336,6 @@ class N4dGtkLogin(Gtk.Box):
 		self.lbl_info_msg.hide()
 		self.info_box.set_name("info")
 		if self.vertical:
-#			self.lbl_info_msg.props.halign=Gtk.Align.FILL
 			self.lbl_info_msg.set_justify(Gtk.Justification.CENTER)
 			self.lbl_info_msg.set_margin_left(12)
 			self.lbl_info_msg.set_margin_right(12)
@@ -340,55 +359,70 @@ class N4dGtkLogin(Gtk.Box):
 		widget.set_tooltip_text(tooltip)
 	#def _set_widget_default_props
 
-	def _status_info_hide(self,widget,data):
-		self.sta_info.hide()
-		self.frame.set_sensitive(True)
+	def _status_info_hide(self,*args):
+		self.rev_info.hide()
 	#def _info_hide
 
 	def _validate(self,widget=None):
+		height=self.get_allocation().height
+
+		self.scr.set_min_content_height(height)
+		self.scr.set_propagate_natural_height(False)
+		self.scr.set_propagate_natural_width(False)
+		self.scr.set_max_content_height(height+1)
 		user=self.txt_username.get_text()
 		pwd=self.txt_password.get_text()
 		server=self.txt_server.get_text()
+		server_ip=''
 		if not server:
 			server='server'
-			try:
-				socket.gethostbyname(server)
-			except:
-				server='localhost'
-		self.spinner.show()
-		self.spinner.start()
-		self.frame.set_sensitive(False)
+		try:
+			server_ip=socket.gethostbyname(server)
+		except:
+			server='localhost'
+		#Check if localhost is server
+		for iface in netifaces.interfaces():
+			for key,netinfo in netifaces.ifaddresses(iface).items():
+				for info in netinfo:
+					if info['addr']==server_ip:
+						server='localhost'
+						break
+
+		self.form_box.set_sensitive(False)
 		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
+		self.spinner.start()
 		th.start()
 	#def _validate
 
 	def _t_validate(self,user,pwd,server):
 		ret=[False]
-		self.lbl_error.set_text(_("Login failed"))
+		msg=_("Login failed")
 		if self.sw_n4d:
 			try:
 				self.n4dclient=self._n4d_connect(server)
 				ret=self.n4dclient.validate_user(user,pwd)
 			except socket.error as e:
-				self.lbl_error.set_text(_("Unknown host"))
+				msg=_("Unknown host")
 				ret=[False,str(e)]
 
 		self.spinner.stop()
-		self.spinner.hide()
-		if not ret[0]:
-			self.sta_info.show()
-			self.lbl_error.show()
+		if (isinstance(ret,bool)):
+			GLib.timeout_add(1000,self.show_info,(msg))
+			#show server entry if we can't connect to n4d in "server"
+			self.txt_server.props.no_show_all=False
+			self.txt_server.show()
+		elif not ret[0]:
+			GLib.timeout_add(1000,self.show_info,(msg))
 			#show server entry if we can't connect to n4d in "server"
 			self.txt_server.props.no_show_all=False
 			self.txt_server.show()
 		elif self.allowed_groups and not set(self.allowed_groups).intersection(ret[1]):
 			#Check user groups
 			self.lbl_error.set_text(_("User not allowed"))
-			self.sta_info.show()
-			self.lbl_error.show()
+			self.rev_info.set_reveal_child(self.lbl_error)
 		else:
 			GLib.idle_add(self.after_validate,user,pwd,server)
-		#local validation
+		self.form_box.set_sensitive(True)
 	#def _t_validate
 
 	def after_validation_goto(self,func,data=None):
@@ -396,6 +430,7 @@ class N4dGtkLogin(Gtk.Box):
 	#def after_validation_func
 
 	def _n4d_connect(self,server):
+		context=ssl._create_unverified_context()
 		try:
 			socket.gethostbyname(server)
 		except:
@@ -405,6 +440,6 @@ class N4dGtkLogin(Gtk.Box):
 			except Exception as e:
 				print(e)
 				raise
-		c = n4d.ServerProxy("https://"+server+":9779")
+		c = n4d.ServerProxy("https://"+server+":9779",context=context,allow_none=True)
 		return c
 	#def _n4d_connect
