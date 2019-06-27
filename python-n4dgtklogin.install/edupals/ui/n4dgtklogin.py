@@ -196,16 +196,15 @@ class N4dGtkLogin(Gtk.Box):
 	#def hide_server_entry
 
 	def show_info(self,msg):
-		if self.msgCount<3:
+		if self.msgCount<10:
 			self.msgCount+=1
 		elif self.rev_info.get_reveal_child():
 			self.rev_info.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
 			self.rev_info.set_reveal_child(False)
 			self.msgCount=0
 			return False
-		else:
-			self.rev_info.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
-			self.rev_info.set_reveal_child(True)
+		self.rev_info.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+		self.rev_info.set_reveal_child(True)
 		return True
     #def show_info
 
@@ -407,12 +406,12 @@ class N4dGtkLogin(Gtk.Box):
 
 		self.spinner.stop()
 		if (isinstance(ret,bool)):
-			GLib.timeout_add(1000,self.show_info,(msg))
+			GLib.timeout_add(500,self.show_info,(msg))
 			#show server entry if we can't connect to n4d in "server"
 			self.txt_server.props.no_show_all=False
 			self.txt_server.show()
 		elif not ret[0]:
-			GLib.timeout_add(1000,self.show_info,(msg))
+			GLib.timeout_add(500,self.show_info,(msg))
 			#show server entry if we can't connect to n4d in "server"
 			self.txt_server.props.no_show_all=False
 			self.txt_server.show()
