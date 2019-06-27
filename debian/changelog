@@ -1,3 +1,9 @@
+python-n4dgtklogin (0.6.1) bionic; urgency=medium
+
+  * Change time interval for error message
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 27 Jun 2019 14:46:31 +0200
+
 python-n4dgtklogin (0.6) bionic; urgency=medium
 
   * Add scrolling to main box
