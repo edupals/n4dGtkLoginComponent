@@ -45,6 +45,7 @@ class N4dGtkLogin(Gtk.Box):
 		self.default_spacing=12
 		self.username_placeholder=_("Username")
 		self.server_placeholder=_("Server IP (Default value : server)")
+		self.default_server='server'
 		self.login_banner_default="llx-avatar"
 		self.info_banner=None
 		self.allowed_groups=[]
@@ -134,6 +135,7 @@ class N4dGtkLogin(Gtk.Box):
 
 	def set_default_server(self,server):
 		self.server_placeholder=server
+		self.default_server=server
 		if self.txt_server:
 			self._set_text_for_entry(self.txt_server,server)
 	#def set_default_server
@@ -375,7 +377,7 @@ class N4dGtkLogin(Gtk.Box):
 		server=self.txt_server.get_text()
 		server_ip=''
 		if not server:
-			server='server'
+			server=self.default_server
 		try:
 			server_ip=socket.gethostbyname(server)
 		except:
