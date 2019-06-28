@@ -1,3 +1,9 @@
+python-n4dgtklogin (0.6.2) bionic; urgency=medium
+
+  * Fix set default server
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 28 Jun 2019 14:01:37 +0200
+
 python-n4dgtklogin (0.6.1) bionic; urgency=medium
 
   * Change time interval for error message
