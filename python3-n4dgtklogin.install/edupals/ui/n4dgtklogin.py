@@ -264,7 +264,7 @@ class N4dGtkLogin(Gtk.Box):
 		self._set_text_for_entry(self.txt_password,_("Password"))
 		self.txt_server=Gtk.Entry()
 		self.txt_server.set_name("GtkEntry")
-		self.set_default_server(self.server_placeholder)
+#		self.set_default_server(self.server_placeholder)
 		self.txt_server.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY,"network-wired")
 		self.btn_sign=Gtk.Button(stock=Gtk.STOCK_OK)
 		self.btn_sign.connect('clicked',self._validate)
