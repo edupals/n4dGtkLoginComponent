@@ -237,12 +237,13 @@ class N4dGtkLogin(Gtk.Box):
 			self.main_grid.attach(self.form_box,1,1,1,1)
 			self.main_grid.attach(self.info_box,1,3,1,1)
 			self.main_grid.set_margin_bottom(12)
+			self.scr.set_valign(Gtk.Align.START)
+			self.pack_start(self.scr,False,False,0)
 		else:
 			self.main_grid.attach(self.info_box,1,1,2,1)
 			self.main_grid.attach(self.form_box,3,1,1,1)
+			self.pack_start(self.scr,True,True,0)
 		self.scr.add(self.main_grid)
-		self.scr.set_valign(Gtk.Align.START)
-		self.pack_start(self.scr,False,False,0)
 		self.set_name("mw")
 		self.form_box.set_name("main")
 	#def render_form

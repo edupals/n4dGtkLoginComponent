@@ -29,7 +29,7 @@ class N4dGtkLogin(Gtk.Box):
 
 	def __init__(self,*args,**kwds):
 		super().__init__(*args,**kwds)
-		self.dbg=True
+		self.dbg=False
 		self.msgCount=0
 		self.vertical=False
 		if 'orientation' in kwds.keys():
@@ -238,12 +238,13 @@ class N4dGtkLogin(Gtk.Box):
 			self.main_grid.attach(self.form_box,1,1,1,1)
 			self.main_grid.attach(self.info_box,1,3,1,1)
 			self.main_grid.set_margin_bottom(12)
+			self.scr.set_valign(Gtk.Align.START)
+			self.pack_start(self.scr,False,False,0)
 		else:
 			self.main_grid.attach(self.info_box,1,1,2,1)
 			self.main_grid.attach(self.form_box,3,1,1,1)
+			self.pack_start(self.scr,True,True,0)
 		self.scr.add(self.main_grid)
-		self.scr.set_valign(Gtk.Align.START)
-		self.pack_start(self.scr,False,False,0)
 		self.set_name("mw")
 		self.form_box.set_name("main")
 	#def render_form
@@ -330,7 +331,7 @@ class N4dGtkLogin(Gtk.Box):
 		self.lbl_info_msg=Gtk.Label()
 		self.lbl_info_msg.set_use_markup(True)
 		self.lbl_info_msg.set_line_wrap(True)
-		info_detail_box.pack_start(self.lbl_info_msg,True,True,0)
+		info_detail_box.pack_end(self.lbl_info_msg,True,True,0)
 		if not '#label' in self.css_classes.keys():
 			self.css_classes['#label']='{background-color:rgba(200,200,200,0.8);;}'
 		self.lbl_info_msg.set_name("label")
@@ -342,12 +343,10 @@ class N4dGtkLogin(Gtk.Box):
 			self.lbl_info_msg.set_margin_left(12)
 			self.lbl_info_msg.set_margin_right(12)
 			info_detail_box.props.valign=Gtk.Align.START
+			self.info_box.pack_start(info_detail_box,False,False,0)
 		else:
 			info_detail_box.props.valign=Gtk.Align.CENTER
 			info_detail_box.props.halign=Gtk.Align.CENTER
-		if self.vertical:
-			self.info_box.pack_start(info_detail_box,False,False,0)
-		else:
 			self.info_box.pack_start(info_detail_box,True,True,0)
 		self._set_css()
 	#def _render_info_form
