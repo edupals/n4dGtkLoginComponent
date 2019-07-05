@@ -29,7 +29,7 @@ class N4dGtkLogin(Gtk.Box):
 
 	def __init__(self,*args,**kwds):
 		super().__init__(*args,**kwds)
-		self.dbg=False
+		self.dbg=True
 		self.msgCount=0
 		self.vertical=False
 		if 'orientation' in kwds.keys():
@@ -390,10 +390,16 @@ class N4dGtkLogin(Gtk.Box):
 						break
 
 		self.form_box.set_sensitive(False)
-		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
 		self.spinner.start()
-		th.start()
+		GLib.idle_add(self._begin_t_validate,user,pwd,server)
 	#def _validate
+
+	def _begin_t_validate(self,user,pwd,server):
+		#Thread starts at GLib to give it some protection against Gtk threads errors
+		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
+		th.start()
+		return(False)
+	#def _begin_t_validate
 
 	def _t_validate(self,user,pwd,server):
 		ret=[False]
@@ -424,6 +430,7 @@ class N4dGtkLogin(Gtk.Box):
 		else:
 			GLib.idle_add(self.after_validate,user,pwd,server)
 		self.form_box.set_sensitive(True)
+		return(False)
 	#def _t_validate
 
 	def after_validation_goto(self,func,data=None):

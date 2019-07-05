@@ -391,10 +391,16 @@ class N4dGtkLogin(Gtk.Box):
 						break
 
 		self.form_box.set_sensitive(False)
-		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
 		self.spinner.start()
-		th.start()
+		GLib.idle_add(self._begin_t_validate,user,pwd,server)
 	#def _validate
+	
+	def _begin_t_validate(self,user,pwd,server):
+		#Thread starts at GLib to give it some protection against Gtk threads errors
+		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
+		th.start()
+		return(False)
+	#def _begin_t_validate
 
 	def _t_validate(self,user,pwd,server):
 		ret=[False]
