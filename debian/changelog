@@ -1,3 +1,9 @@
+python-n4dgtklogin (1.0) bionic; urgency=medium
+
+  * Add thread safety between glib and threads
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Wed, 24 Jul 2019 13:15:36 +0200
+
 python-n4dgtklogin (0.6.5) bionic; urgency=medium
 
   * Launch thread into glib
