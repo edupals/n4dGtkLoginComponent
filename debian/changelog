@@ -1,3 +1,9 @@
+python-n4dgtklogin (1.0.1) bionic; urgency=medium
+
+  * Attempt to fix thread bug
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Mon, 29 Jul 2019 11:07:56 +0200
+
 python-n4dgtklogin (1.0) bionic; urgency=medium
 
   * Add thread safety between glib and threads
