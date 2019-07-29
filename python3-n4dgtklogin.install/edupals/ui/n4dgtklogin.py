@@ -389,7 +389,6 @@ class N4dGtkLogin(Gtk.Box):
 						server='localhost'
 						break
 
-		self.form_box.set_sensitive(False)
 		self.spinner.start()
 		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
 		th.start()
@@ -397,6 +396,7 @@ class N4dGtkLogin(Gtk.Box):
 
 	def _t_validate(self,user,pwd,server):
 		Gdk.threads_enter()
+		self.form_box.set_sensitive(False)
 		ret=[False]
 		msg=_("Login failed")
 		if self.sw_n4d:
