@@ -1,3 +1,9 @@
+python-n4dgtklogin (1.1) bionic; urgency=medium
+
+  * Another attempt... 
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Wed, 04 Sep 2019 13:37:30 +0200
+
 python-n4dgtklogin (1.0.1) bionic; urgency=medium
 
   * Attempt to fix thread bug
