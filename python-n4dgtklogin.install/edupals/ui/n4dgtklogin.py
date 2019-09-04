@@ -390,14 +390,14 @@ class N4dGtkLogin(Gtk.Box):
 						server='localhost'
 						break
 
+		self.form_box.set_sensitive(False)
 		self.spinner.start()
-		th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
-		th.start()
+		self.th=threading.Thread(target=self._t_validate,args=[user,pwd,server])
+		self.th.start()
 	#def _validate
 	
 	def _t_validate(self,user,pwd,server):
 		Gdk.threads_enter()
-		self.form_box.set_sensitive(False)
 		ret=[False]
 		msg=_("Login failed")
 		if self.sw_n4d:
@@ -408,27 +408,31 @@ class N4dGtkLogin(Gtk.Box):
 				msg=_("Unknown host")
 				ret=[False,str(e)]
 
-		self.spinner.stop()
 		if (isinstance(ret,bool)):
-			GLib.timeout_add(500,self.show_info,(msg))
-			#show server entry if we can't connect to n4d in "server"
-			self.txt_server.props.no_show_all=False
-			self.txt_server.show()
+			pass
 		elif not ret[0]:
-			GLib.timeout_add(500,self.show_info,(msg))
-			#show server entry if we can't connect to n4d in "server"
-			self.txt_server.props.no_show_all=False
-			self.txt_server.show()
+			pass
 		elif self.allowed_groups and not set(self.allowed_groups).intersection(ret[1]):
 			#Check user groups
-			self.lbl_error.set_text(_("User not allowed"))
-			self.rev_info.set_reveal_child(self.lbl_error)
+			msg=_("User not allowed")
 		else:
-			GLib.idle_add(self.after_validate,user,pwd,server)
-		self.form_box.set_sensitive(True)
+			msg=""
+		GLib.idle_add(self._validate_result,msg,user,pwd,server)
 		Gdk.threads_leave()
 		return(False)
 	#def _t_validate
+	
+	def _validate_result(self,msg,user,pwd,server):
+		self.spinner.stop()
+		self.form_box.set_sensitive(True)
+		self.th.join()
+		if msg:
+			GLib.timeout_add(500,self.show_info,(msg))
+			self.txt_server.props.no_show_all=False
+			self.txt_server.show()
+		else:
+			self.after_validate(user,pwd,server)
+		return False
 
 	def after_validation_goto(self,func,data=None):
 		self.after_validate=func
