@@ -439,7 +439,6 @@ class N4dGtkLogin(Gtk.Box):
 	#def after_validation_func
 
 	def _n4d_connect(self,server):
-		context=ssl._create_unverified_context()
 		try:
 			socket.gethostbyname(server)
 		except:
@@ -449,6 +448,6 @@ class N4dGtkLogin(Gtk.Box):
 			except Exception as e:
 				print(e)
 				raise
-		c = n4d.ServerProxy("https://"+server+":9779",context=context,allow_none=True)
+		c = n4d.ServerProxy("https://"+server+":9779")
 		return c
 	#def _n4d_connect
