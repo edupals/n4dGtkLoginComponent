@@ -1,8 +1,8 @@
-python-n4dgtklogin (1.1.2) bionic; urgency=medium
+python-n4dgtklogin (1.1.3) bionic; urgency=medium
 
   * Fix python3 code on python2 version
 
- -- Juanma Navarro Manez <juanma1980@gmail.com>  Mon, 09 Sep 2019 12:41:05 +0200
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Mon, 09 Sep 2019 12:41:05 +0200
 
 python-n4dgtklogin (1.1) bionic; urgency=medium
 
